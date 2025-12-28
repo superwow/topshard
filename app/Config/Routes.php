@@ -23,6 +23,7 @@ $routes->setAutoRoute(false);
 
 $routes->get('/', [HomeController::class, 'index']);
 $routes->get('/servers', [ServerController::class, 'index']);
+$routes->get('/server/(:segment)', [ServerController::class, 'show']);
 $routes->get('/rules', [StaticPageController::class, 'rules']);
 $routes->get('/promo', [StaticPageController::class, 'promo']);
 $routes->get('/about', [StaticPageController::class, 'about']);
