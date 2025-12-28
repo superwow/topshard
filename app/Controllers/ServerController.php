@@ -11,25 +11,35 @@ class ServerController extends BaseController
     {
         $serverModel = new ServerModel();
         $filters = [
-            'game' => $this->request->getGet('game'),
-            'type' => $this->request->getGet('type'),
-            'rates' => $this->request->getGet('rates'),
-            'region' => $this->request->getGet('region'),
+            'game' => trim((string) $this->request->getGet('game')),
+            'type' => trim((string) $this->request->getGet('type')),
+            'rates' => trim((string) $this->request->getGet('rates')),
+            'region' => trim((string) $this->request->getGet('region')),
+            'language' => trim((string) $this->request->getGet('language')),
+            'q' => trim((string) $this->request->getGet('q')),
+            'sort' => $this->request->getGet('sort') ?: 'new',
         ];
 
-        $servers = $serverModel->filterActive($filters)->paginate(10);
+        if (! in_array($filters['sort'], ['new', 'updated'], true)) {
+            $filters['sort'] = 'new';
+        }
+
+        $perPage = 9;
+        $servers = $serverModel->applyFilters($filters)->paginate($perPage);
 
         return view('pages/servers', [
             'servers' => $servers,
             'pager' => $serverModel->pager,
             'filters' => $filters,
+            'filterOptions' => (new ServerModel())->getFilterOptions(),
+            'perPage' => $perPage,
         ]);
     }
 
     public function show(string $slug)
     {
         $serverModel = new ServerModel();
-        $server = $serverModel->where('slug', $slug)->first();
+        $server = $serverModel->findPublicBySlug($slug);
 
         if (! $server) {
             throw PageNotFoundException::forPageNotFound("Server {$slug} not found");
@@ -38,6 +48,7 @@ class ServerController extends BaseController
         return view('pages/server', [
             'server' => $server,
             'metricsPlaceholder' => true,
+            'relatedServers' => (new ServerModel())->getRelatedServers($server),
         ]);
     }
 }
