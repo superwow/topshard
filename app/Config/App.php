@@ -20,6 +20,8 @@ class App extends BaseConfig
 
     public string $appTimezone = 'UTC';
 
+    public string $adminPassword = 'changeme';
+
     public string $charset = 'UTF-8';
 
     public bool $forceGlobalSecureRequests = false;
@@ -49,4 +51,11 @@ class App extends BaseConfig
     public string $proxyIPs = '';
 
     public bool $CSPEnabled = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->adminPassword = env('app.adminPassword', $this->adminPassword);
+    }
 }
