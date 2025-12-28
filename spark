@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$startTime = microtime(true);
+
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR);
+
+require __DIR__ . '/vendor/autoload.php';
+
+$paths = new Config\Paths();
+
+$app = Config\Services::codeigniter();
+$app->setContext('cli');
+$app->setPaths($paths);
+$app->setStartTime($startTime);
+$app->run();
