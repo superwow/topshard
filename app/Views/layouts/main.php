@@ -116,6 +116,7 @@
             <a href="/promo">Промо</a>
             <a href="/rules">Правила</a>
             <a href="/about">О проекте</a>
+            <a href="/admin">Админка</a>
         </nav>
         <div>
             <a class="btn" href="/add">Добавить сервер</a>
