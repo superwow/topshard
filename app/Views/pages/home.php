@@ -29,7 +29,7 @@
                     <li style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid #1f2937;">
                         <div>
                             <a href="/server/<?= esc($server['slug']) ?>"><?= esc($server['name']) ?></a>
-                            <div class="muted"><?= esc($server['game']) ?> • <?= esc($server['type']) ?></div>
+                            <div class="muted"><?= esc($server['game']) ?> • <?= esc($server['type']) ?> • Голоса: <?= esc($voteCounts[$server['id']] ?? 0) ?></div>
                         </div>
                         <span class="badge <?= esc($server['status']) ?>"><?= esc($server['status']) ?></span>
                     </li>
@@ -44,7 +44,7 @@
             <?php foreach ($trendingServers as $server): ?>
                 <li style="padding:0.5rem 0;border-bottom:1px solid #1f2937;">
                     <div><a href="/server/<?= esc($server['slug']) ?>"><?= esc($server['name']) ?></a></div>
-                    <div class="muted"><?= esc($server['game']) ?> • нет данных по росту</div>
+                    <div class="muted"><?= esc($server['game']) ?> • Голоса: <?= esc($voteCounts[$server['id']] ?? 0) ?> • нет данных по росту</div>
                 </li>
             <?php endforeach; ?>
         </ul>

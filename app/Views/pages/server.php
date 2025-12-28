@@ -10,6 +10,7 @@
             <span class="pill">Регион: <?= esc($server['region'] ?? '—') ?></span>
             <span class="pill">Рейты: <?= esc($server['rates'] ?? '—') ?></span>
             <span class="pill">Язык: <?= esc(strtoupper($server['language'] ?? '—')) ?></span>
+            <span class="pill">Голоса: <?= esc($voteCount) ?></span>
         </div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
@@ -21,6 +22,18 @@
         </div>
     </div>
 </div>
+
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="card" style="border-color:#22d3ee;">
+        <p style="margin:0;"><?= esc(session()->getFlashdata('success')) ?></p>
+    </div>
+<?php endif; ?>
+
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="card" style="border-color:#f87171;">
+        <p style="margin:0;"><?= esc(session()->getFlashdata('error')) ?></p>
+    </div>
+<?php endif; ?>
 
 <div class="grid grid-2">
     <div class="card">
@@ -44,6 +57,19 @@
         <p class="muted">Online: нет данных<br>Uptime: нет данных</p>
         <?php if ($metricsPlaceholder): ?>
             <p class="muted">Графики появятся после подключения cron/worker.</p>
+        <?php endif; ?>
+        <h3>Голосование</h3>
+        <p class="muted" style="margin-top:0;">Голоса: <?= esc($voteCount) ?></p>
+        <?php if ($server['status'] !== 'active'): ?>
+            <p class="muted">Голосовать можно только за активные сервера.</p>
+        <?php else: ?>
+            <form method="post" action="/server/<?= esc($server['slug']) ?>/vote" style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;">
+                <?= csrf_field() ?>
+                <button class="btn" type="submit" <?= $canVote ? '' : 'disabled' ?>><?= $canVote ? 'Голосовать' : 'Уже проголосовали' ?></button>
+            </form>
+            <?php if (! $canVote && $nextVoteAt): ?>
+                <p class="muted">Следующее голосование: <?= esc($nextVoteAt->format('d.m.Y H:i')) ?></p>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>

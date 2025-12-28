@@ -103,6 +103,7 @@
                         <span class="pill">Рейты: <?= esc($server['rates'] ?? '—') ?></span>
                         <span class="pill">Регион: <?= esc($server['region'] ?? '—') ?></span>
                         <span class="pill">Язык: <?= esc(strtoupper($server['language'] ?? '—')) ?></span>
+                        <span class="pill">Голоса: <?= esc($voteCounts[$server['id']] ?? 0) ?></span>
                     </div>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem;">
