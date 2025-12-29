@@ -99,11 +99,17 @@
                     <p class="muted" style="margin-top:0.5rem;">
                         <?= esc(mb_strimwidth($server['description'] ?? 'Описание пока не добавлено.', 0, 140, '…')) ?>
                     </p>
+                    <?php $stats = $voteStats[$server['id']] ?? ['total' => 0, 'votes_24h' => 0, 'votes_7d' => 0]; ?>
                     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;">
                         <span class="pill">Рейты: <?= esc($server['rates'] ?? '—') ?></span>
                         <span class="pill">Регион: <?= esc($server['region'] ?? '—') ?></span>
                         <span class="pill">Язык: <?= esc(strtoupper($server['language'] ?? '—')) ?></span>
-                        <span class="pill">Голоса: <?= esc($voteCounts[$server['id']] ?? 0) ?></span>
+                        <span class="pill">Голоса 24ч: <?= esc($stats['votes_24h']) ?></span>
+                        <span class="pill">Голоса 7д: <?= esc($stats['votes_7d']) ?></span>
+                        <span class="pill">Всего: <?= esc($stats['total']) ?></span>
+                        <?php if (isset($ratings[$server['id']])): ?>
+                            <span class="pill">Рейтинг: <?= esc(number_format($ratings[$server['id']], 1)) ?></span>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem;">
