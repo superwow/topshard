@@ -27,7 +27,12 @@ class ServerController extends BaseController
 
         $perPage = 9;
         $servers = $serverModel->applyFilters($filters)->paginate($perPage);
-        $voteCounts = (new VoteModel())->countForServers(array_column($servers, 'id'));
+        $voteModel = new VoteModel();
+        $voteStats = $voteModel->getStatsForServers(array_column($servers, 'id'));
+        $ratings = [];
+        foreach ($voteStats as $id => $stats) {
+            $ratings[$id] = $voteModel->calculateRating($stats);
+        }
 
         return view('pages/servers', [
             'servers' => $servers,
@@ -35,7 +40,8 @@ class ServerController extends BaseController
             'filters' => $filters,
             'filterOptions' => (new ServerModel())->getFilterOptions(),
             'perPage' => $perPage,
-            'voteCounts' => $voteCounts,
+            'voteStats' => $voteStats,
+            'ratings' => $ratings,
         ]);
     }
 
@@ -52,12 +58,16 @@ class ServerController extends BaseController
         $voterHash = $this->getVoterHash();
         $recentVote = $voteModel->getRecentVote((int) $server['id'], $voterHash, 24);
         $nextVoteAt = $recentVote ? $recentVote->addHours(24) : null;
+        $stats = $voteModel->getStatsForServers([(int) $server['id']]);
+        $serverStats = $stats[(int) $server['id']] ?? ['total' => 0, 'votes_24h' => 0, 'votes_7d' => 0];
 
         return view('pages/server', [
             'server' => $server,
             'metricsPlaceholder' => true,
             'relatedServers' => (new ServerModel())->getRelatedServers($server),
-            'voteCount' => $voteModel->countForServer((int) $server['id']),
+            'voteStats' => $serverStats,
+            'rating' => $voteModel->calculateRating($serverStats),
+            'trendScore' => $voteModel->calculateTrendScore($serverStats),
             'canVote' => $server['status'] === 'active' && $recentVote === null,
             'nextVoteAt' => $nextVoteAt,
         ]);

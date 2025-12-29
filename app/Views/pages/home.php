@@ -13,8 +13,8 @@
     </div>
     <div class="card" style="background:linear-gradient(135deg,#0f172a,#111827);border:1px solid #1f2937;">
         <h3>Рейтинг (MVP)</h3>
-        <p class="muted">Score = 0.55*Online7d + 0.35*Votes24h + 0.10*Uptime30d</p>
-        <p class="muted">Online/Uptime пока “нет данных”, но схема и таблицы готовы.</p>
+        <p class="muted">Score = 0.6*Votes7d + 0.4*Votes24h. Online/Uptime добавим позже.</p>
+        <p class="muted">Сейчас считаем рейтинг и тренды по реальным голосам за 24 часа и 7 дней.</p>
     </div>
 </section>
 
@@ -29,7 +29,13 @@
                     <li style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid #1f2937;">
                         <div>
                             <a href="/server/<?= esc($server['slug']) ?>"><?= esc($server['name']) ?></a>
-                            <div class="muted"><?= esc($server['game']) ?> • <?= esc($server['type']) ?> • Голоса: <?= esc($voteCounts[$server['id']] ?? 0) ?></div>
+                            <div class="muted">
+                                <?= esc($server['game']) ?> • <?= esc($server['type']) ?> •
+                                24ч: <?= esc($server['stats']['votes_24h'] ?? 0) ?> •
+                                7д: <?= esc($server['stats']['votes_7d'] ?? 0) ?> •
+                                всего: <?= esc($server['stats']['total'] ?? 0) ?> •
+                                рейтинг: <?= esc(number_format($server['rating'], 1)) ?>
+                            </div>
                         </div>
                         <span class="badge <?= esc($server['status']) ?>"><?= esc($server['status']) ?></span>
                     </li>
@@ -39,12 +45,18 @@
     </div>
     <div class="card">
         <h2>Тренды</h2>
-        <p class="muted">Заглушка: появится после подключения метрик.</p>
+        <p class="muted">Динамика по голосам за 24 часа vs. средний день за 7 дней.</p>
         <ul style="list-style:none;padding:0;margin:0;">
             <?php foreach ($trendingServers as $server): ?>
                 <li style="padding:0.5rem 0;border-bottom:1px solid #1f2937;">
                     <div><a href="/server/<?= esc($server['slug']) ?>"><?= esc($server['name']) ?></a></div>
-                    <div class="muted"><?= esc($server['game']) ?> • Голоса: <?= esc($voteCounts[$server['id']] ?? 0) ?> • нет данных по росту</div>
+                    <div class="muted">
+                        <?= esc($server['game']) ?> •
+                        24ч: <?= esc($server['stats']['votes_24h'] ?? 0) ?> •
+                        7д: <?= esc($server['stats']['votes_7d'] ?? 0) ?> •
+                        рейтинг: <?= esc(number_format($server['rating'], 1)) ?> •
+                        тренд: <?= esc(number_format($server['trendScore'], 1)) ?>
+                    </div>
                 </li>
             <?php endforeach; ?>
         </ul>

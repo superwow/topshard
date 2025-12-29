@@ -10,7 +10,10 @@
             <span class="pill">Регион: <?= esc($server['region'] ?? '—') ?></span>
             <span class="pill">Рейты: <?= esc($server['rates'] ?? '—') ?></span>
             <span class="pill">Язык: <?= esc(strtoupper($server['language'] ?? '—')) ?></span>
-            <span class="pill">Голоса: <?= esc($voteCount) ?></span>
+            <span class="pill">Голоса 24ч: <?= esc($voteStats['votes_24h']) ?></span>
+            <span class="pill">Голоса 7д: <?= esc($voteStats['votes_7d']) ?></span>
+            <span class="pill">Всего: <?= esc($voteStats['total']) ?></span>
+            <span class="pill">Рейтинг: <?= esc(number_format($rating, 1)) ?></span>
         </div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
@@ -54,12 +57,21 @@
         <h3>Подключение</h3>
         <p class="muted">Хост: <?= esc($server['connect_host'] ?? '—') ?><br>Порт: <?= esc($server['connect_port'] ?? '—') ?></p>
         <h3>Статистика</h3>
+        <p class="muted">
+            Рейтинг: <?= esc(number_format($rating, 1)) ?> •
+            Тренд: <?= esc(number_format($trendScore, 1)) ?>
+        </p>
+        <p class="muted">
+            Голоса 24ч: <?= esc($voteStats['votes_24h']) ?><br>
+            Голоса 7д: <?= esc($voteStats['votes_7d']) ?><br>
+            Всего: <?= esc($voteStats['total']) ?>
+        </p>
         <p class="muted">Online: нет данных<br>Uptime: нет данных</p>
         <?php if ($metricsPlaceholder): ?>
             <p class="muted">Графики появятся после подключения cron/worker.</p>
         <?php endif; ?>
         <h3>Голосование</h3>
-        <p class="muted" style="margin-top:0;">Голоса: <?= esc($voteCount) ?></p>
+        <p class="muted" style="margin-top:0;">Всего голосов: <?= esc($voteStats['total']) ?> (24ч: <?= esc($voteStats['votes_24h']) ?>, 7д: <?= esc($voteStats['votes_7d']) ?>)</p>
         <?php if ($server['status'] !== 'active'): ?>
             <p class="muted">Голосовать можно только за активные сервера.</p>
         <?php else: ?>
