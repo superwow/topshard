@@ -37,6 +37,7 @@
     "config": {
         "allow-plugins": {
             "codeigniter4/framework": true
-        }
+        },
+        "http-timeout": 60
     }
 }
